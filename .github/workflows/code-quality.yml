@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "Running TypeScript type checks..."
           cd frontend && npx tsc --noEmit
-          cd ../backend && npx tsc --noEmit
+          cd ../backend && npx tsc --noEmit --project tsconfig.json
 
       - name: Check for TODO comments
         run: |
