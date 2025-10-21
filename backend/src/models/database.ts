@@ -10,7 +10,7 @@ db.serialize(() => {
     password TEXT NOT NULL,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
-  
+
   db.run(`CREATE TABLE IF NOT EXISTS Generation (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     userId INTEGER NOT NULL,

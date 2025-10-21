@@ -1,13 +1,16 @@
-import request from 'supertest';
-import express from 'express';
 import bcrypt from 'bcrypt';
+import express from 'express';
 import jwt from 'jsonwebtoken';
+import request from 'supertest';
+
 import { signup, login } from '../src/controllers/authController';
 import { findUserByEmail, createUser, userExists } from '../src/models/User';
 
 // Mock the User model functions
 jest.mock('../src/models/User');
-const mockedFindUserByEmail = findUserByEmail as jest.MockedFunction<typeof findUserByEmail>;
+const mockedFindUserByEmail = findUserByEmail as jest.MockedFunction<
+  typeof findUserByEmail
+>;
 const mockedCreateUser = createUser as jest.MockedFunction<typeof createUser>;
 const mockedUserExists = userExists as jest.MockedFunction<typeof userExists>;
 
@@ -39,22 +42,23 @@ describe('Auth Controller', () => {
       // Arrange
       const userData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       mockedUserExists.mockResolvedValue(false);
       mockedCreateUser.mockResolvedValue(1);
 
       // Act
-      const response = await request(app)
-        .post('/signup')
-        .send(userData);
+      const response = await request(app).post('/signup').send(userData);
 
       // Assert
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ token: 'mock_jwt_token' });
       expect(mockedUserExists).toHaveBeenCalledWith('test@example.com');
       expect(mockedBcrypt.hash).toHaveBeenCalledWith('password123', 10);
-      expect(mockedCreateUser).toHaveBeenCalledWith('test@example.com', 'hashed_password');
+      expect(mockedCreateUser).toHaveBeenCalledWith(
+        'test@example.com',
+        'hashed_password'
+      );
       expect(mockedJwt.sign).toHaveBeenCalledWith(
         { userId: 1 },
         process.env.JWT_SECRET || 'dev_secret',
@@ -66,18 +70,16 @@ describe('Auth Controller', () => {
       // Arrange
       const userData = {
         email: 'existing@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       mockedUserExists.mockResolvedValue(true);
 
       // Act
-      const response = await request(app)
-        .post('/signup')
-        .send(userData);
+      const response = await request(app).post('/signup').send(userData);
 
       // Assert
       expect(response.status).toBe(409);
-      expect(response.body).toEqual({ message: 'user exists' });
+      expect(response.body).toEqual({ message: 'Email ID already exists' });
       expect(mockedUserExists).toHaveBeenCalledWith('existing@example.com');
       expect(mockedCreateUser).not.toHaveBeenCalled();
     });
@@ -86,18 +88,18 @@ describe('Auth Controller', () => {
       // Arrange
       const userData = {
         email: 'invalid-email',
-        password: 'password123'
+        password: 'password123',
       };
 
       // Act
-      const response = await request(app)
-        .post('/signup')
-        .send(userData);
+      const response = await request(app).post('/signup').send(userData);
 
       // Assert
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('Validation error');
-      expect(response.body.details).toContain('Please provide a valid email address');
+      expect(response.body.details).toContain(
+        'Please provide a valid email address'
+      );
       expect(mockedUserExists).not.toHaveBeenCalled();
     });
 
@@ -105,31 +107,29 @@ describe('Auth Controller', () => {
       // Arrange
       const userData = {
         email: 'test@example.com',
-        password: '123'
+        password: '123',
       };
 
       // Act
-      const response = await request(app)
-        .post('/signup')
-        .send(userData);
+      const response = await request(app).post('/signup').send(userData);
 
       // Assert
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('Validation error');
-      expect(response.body.details).toContain('Password must be at least 6 characters long');
+      expect(response.body.details).toContain(
+        'Password must be at least 6 characters long'
+      );
       expect(mockedUserExists).not.toHaveBeenCalled();
     });
 
     it('should return 400 for missing email', async () => {
       // Arrange
       const userData = {
-        password: 'password123'
+        password: 'password123',
       };
 
       // Act
-      const response = await request(app)
-        .post('/signup')
-        .send(userData);
+      const response = await request(app).post('/signup').send(userData);
 
       // Assert
       expect(response.status).toBe(400);
@@ -140,13 +140,11 @@ describe('Auth Controller', () => {
     it('should return 400 for missing password', async () => {
       // Arrange
       const userData = {
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
 
       // Act
-      const response = await request(app)
-        .post('/signup')
-        .send(userData);
+      const response = await request(app).post('/signup').send(userData);
 
       // Assert
       expect(response.status).toBe(400);
@@ -158,18 +156,16 @@ describe('Auth Controller', () => {
       // Arrange
       const userData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       mockedUserExists.mockRejectedValue(new Error('Database error'));
 
       // Act
-      const response = await request(app)
-        .post('/signup')
-        .send(userData);
+      const response = await request(app).post('/signup').send(userData);
 
       // Assert
       expect(response.status).toBe(500);
-      expect(response.body).toEqual({ message: 'server error' });
+      expect(response.body).toEqual({ message: 'There is some issue please try again later' });
     });
   });
 
@@ -178,27 +174,28 @@ describe('Auth Controller', () => {
       // Arrange
       const loginData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       const mockUser = {
         id: 1,
         email: 'test@example.com',
         password: 'hashed_password',
-        createdAt: '2023-01-01T00:00:00.000Z'
+        createdAt: '2023-01-01T00:00:00.000Z',
       };
       mockedFindUserByEmail.mockResolvedValue(mockUser);
       mockedBcrypt.compare.mockResolvedValue(true as never);
 
       // Act
-      const response = await request(app)
-        .post('/login')
-        .send(loginData);
+      const response = await request(app).post('/login').send(loginData);
 
       // Assert
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ token: 'mock_jwt_token' });
       expect(mockedFindUserByEmail).toHaveBeenCalledWith('test@example.com');
-      expect(mockedBcrypt.compare).toHaveBeenCalledWith('password123', 'hashed_password');
+      expect(mockedBcrypt.compare).toHaveBeenCalledWith(
+        'password123',
+        'hashed_password'
+      );
       expect(mockedJwt.sign).toHaveBeenCalledWith(
         { userId: 1 },
         process.env.JWT_SECRET || 'dev_secret',
@@ -210,19 +207,19 @@ describe('Auth Controller', () => {
       // Arrange
       const loginData = {
         email: 'nonexistent@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       mockedFindUserByEmail.mockResolvedValue(null);
 
       // Act
-      const response = await request(app)
-        .post('/login')
-        .send(loginData);
+      const response = await request(app).post('/login').send(loginData);
 
       // Assert
       expect(response.status).toBe(401);
-      expect(response.body).toEqual({ message: 'invalid credentials' });
-      expect(mockedFindUserByEmail).toHaveBeenCalledWith('nonexistent@example.com');
+      expect(response.body).toEqual({ message: 'Invalid Email ID or Password' });
+      expect(mockedFindUserByEmail).toHaveBeenCalledWith(
+        'nonexistent@example.com'
+      );
       expect(mockedBcrypt.compare).not.toHaveBeenCalled();
     });
 
@@ -230,58 +227,57 @@ describe('Auth Controller', () => {
       // Arrange
       const loginData = {
         email: 'test@example.com',
-        password: 'wrongpassword'
+        password: 'wrongpassword',
       };
       const mockUser = {
         id: 1,
         email: 'test@example.com',
         password: 'hashed_password',
-        createdAt: '2023-01-01T00:00:00.000Z'
+        createdAt: '2023-01-01T00:00:00.000Z',
       };
       mockedFindUserByEmail.mockResolvedValue(mockUser);
       mockedBcrypt.compare.mockResolvedValue(false as never);
 
       // Act
-      const response = await request(app)
-        .post('/login')
-        .send(loginData);
+      const response = await request(app).post('/login').send(loginData);
 
       // Assert
       expect(response.status).toBe(401);
-      expect(response.body).toEqual({ message: 'invalid credentials' });
+      expect(response.body).toEqual({ message: 'Invalid Email ID or Password' });
       expect(mockedFindUserByEmail).toHaveBeenCalledWith('test@example.com');
-      expect(mockedBcrypt.compare).toHaveBeenCalledWith('wrongpassword', 'hashed_password');
+      expect(mockedBcrypt.compare).toHaveBeenCalledWith(
+        'wrongpassword',
+        'hashed_password'
+      );
     });
 
     it('should return 400 for invalid email format', async () => {
       // Arrange
       const loginData = {
         email: 'invalid-email',
-        password: 'password123'
+        password: 'password123',
       };
 
       // Act
-      const response = await request(app)
-        .post('/login')
-        .send(loginData);
+      const response = await request(app).post('/login').send(loginData);
 
       // Assert
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('Validation error');
-      expect(response.body.details).toContain('Please provide a valid email address');
+      expect(response.body.details).toContain(
+        'Please provide a valid email address'
+      );
       expect(mockedFindUserByEmail).not.toHaveBeenCalled();
     });
 
     it('should return 400 for missing email', async () => {
       // Arrange
       const loginData = {
-        password: 'password123'
+        password: 'password123',
       };
 
       // Act
-      const response = await request(app)
-        .post('/login')
-        .send(loginData);
+      const response = await request(app).post('/login').send(loginData);
 
       // Assert
       expect(response.status).toBe(400);
@@ -292,13 +288,11 @@ describe('Auth Controller', () => {
     it('should return 400 for missing password', async () => {
       // Arrange
       const loginData = {
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
 
       // Act
-      const response = await request(app)
-        .post('/login')
-        .send(loginData);
+      const response = await request(app).post('/login').send(loginData);
 
       // Assert
       expect(response.status).toBe(400);
@@ -310,18 +304,16 @@ describe('Auth Controller', () => {
       // Arrange
       const loginData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       mockedFindUserByEmail.mockRejectedValue(new Error('Database error'));
 
       // Act
-      const response = await request(app)
-        .post('/login')
-        .send(loginData);
+      const response = await request(app).post('/login').send(loginData);
 
       // Assert
       expect(response.status).toBe(500);
-      expect(response.body).toEqual({ message: 'server error' });
+      expect(response.body).toEqual({ message: 'There is some issue please try again later' });
     });
   });
 
@@ -330,15 +322,13 @@ describe('Auth Controller', () => {
       // Arrange
       const userData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       mockedUserExists.mockResolvedValue(false);
       mockedCreateUser.mockResolvedValue(42);
 
       // Act
-      await request(app)
-        .post('/signup')
-        .send(userData);
+      await request(app).post('/signup').send(userData);
 
       // Assert
       expect(mockedJwt.sign).toHaveBeenCalledWith(
@@ -352,21 +342,19 @@ describe('Auth Controller', () => {
       // Arrange
       const loginData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       const mockUser = {
         id: 99,
         email: 'test@example.com',
         password: 'hashed_password',
-        createdAt: '2023-01-01T00:00:00.000Z'
+        createdAt: '2023-01-01T00:00:00.000Z',
       };
       mockedFindUserByEmail.mockResolvedValue(mockUser);
       mockedBcrypt.compare.mockResolvedValue(true as never);
 
       // Act
-      await request(app)
-        .post('/login')
-        .send(loginData);
+      await request(app).post('/login').send(loginData);
 
       // Assert
       expect(mockedJwt.sign).toHaveBeenCalledWith(
@@ -382,15 +370,13 @@ describe('Auth Controller', () => {
       // Arrange
       const userData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       mockedUserExists.mockResolvedValue(false);
       mockedCreateUser.mockResolvedValue(1);
 
       // Act
-      await request(app)
-        .post('/signup')
-        .send(userData);
+      await request(app).post('/signup').send(userData);
 
       // Assert
       expect(mockedBcrypt.hash).toHaveBeenCalledWith('password123', 10);
@@ -400,24 +386,25 @@ describe('Auth Controller', () => {
       // Arrange
       const loginData = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
       const mockUser = {
         id: 1,
         email: 'test@example.com',
         password: 'hashed_password',
-        createdAt: '2023-01-01T00:00:00.000Z'
+        createdAt: '2023-01-01T00:00:00.000Z',
       };
       mockedFindUserByEmail.mockResolvedValue(mockUser);
       mockedBcrypt.compare.mockResolvedValue(true as never);
 
       // Act
-      await request(app)
-        .post('/login')
-        .send(loginData);
+      await request(app).post('/login').send(loginData);
 
       // Assert
-      expect(mockedBcrypt.compare).toHaveBeenCalledWith('password123', 'hashed_password');
+      expect(mockedBcrypt.compare).toHaveBeenCalledWith(
+        'password123',
+        'hashed_password'
+      );
     });
   });
 });
