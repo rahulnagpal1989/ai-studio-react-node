@@ -5,24 +5,27 @@ A full-stack AI image generation application with user authentication, image upl
 ## 🏗️ Architecture
 
 This repo contains two main components:
+
 - **backend**: Express + TypeScript + Prisma + SQLite (runs on port 4000)
 - **frontend**: Next.js App Router + React + TypeScript (runs on port 3000)
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 8+
 - Git
 
 ## 🚀 Quick Start
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd ai-studio-react-node
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 # Install root dependencies
 npm install
@@ -37,6 +40,7 @@ npm install
 ```
 
 ### 3. Database Setup
+
 ```bash
 cd backend
 npx prisma generate
@@ -44,20 +48,24 @@ npx prisma migrate dev --name init
 ```
 
 ### 4. Environment Variables
+
 Create `.env` files if needed:
 
 **Backend** (`backend/.env`):
+
 ```env
 JWT_SECRET=your_jwt_secret_here
 DATABASE_URL="file:./dev.db"
 ```
 
 **Frontend** (`frontend/.env.local`):
+
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
 ```
 
 ### 5. Start the Application
+
 ```bash
 # Terminal 1 - Backend
 cd backend
@@ -69,6 +77,7 @@ npm run dev
 ```
 
 ### 6. Access the Application
+
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:4000
 
@@ -77,6 +86,7 @@ npm run dev
 ### Unit Tests
 
 **Backend Tests:**
+
 ```bash
 cd backend
 npm test
@@ -84,6 +94,7 @@ npm test -- --coverage
 ```
 
 **Frontend Tests:**
+
 ```bash
 cd frontend
 npm test
@@ -96,6 +107,7 @@ npm test -- --coverage
 Make sure both servers are running (see Quick Start steps 5)
 
 **Run E2E Tests:**
+
 ```bash
 # Run all E2E tests
 npm run test:e2e
@@ -114,6 +126,7 @@ npm run test:e2e:report
 ```
 
 **Run Specific Test Suites:**
+
 ```bash
 # Run only authentication tests
 npx playwright test --grep "Authentication Flow"
@@ -126,6 +139,7 @@ npx playwright test --grep "Responsive Design"
 ```
 
 ### All Tests
+
 ```bash
 # Run all tests (unit + E2E)
 npm run test:all
@@ -134,6 +148,7 @@ npm run test:all
 ## 🔧 Development
 
 ### Code Quality
+
 ```bash
 # Lint code
 npm run lint
@@ -152,6 +167,7 @@ npm run check
 ```
 
 ### Build for Production
+
 ```bash
 # Build backend
 cd backend
@@ -191,12 +207,14 @@ ai-studio-react-node/
 ## 🎯 Features
 
 ### Authentication
+
 - User registration and login
 - JWT token-based authentication
 - Password hashing with bcrypt
 - Form validation
 
 ### Image Generation
+
 - Image upload with preview
 - Style selection (Classic, Avant-garde, Street)
 - Prompt-based generation
@@ -205,6 +223,7 @@ ai-studio-react-node/
 - Generation history
 
 ### User Experience
+
 - Responsive design (mobile, tablet, desktop)
 - Loading states and error handling
 - Accessibility features
@@ -213,12 +232,14 @@ ai-studio-react-node/
 ## 🚀 Deployment
 
 ### Environment Setup
+
 1. Set up production environment variables
 2. Configure database (SQLite or PostgreSQL)
 3. Set up reverse proxy (nginx)
 4. Configure SSL certificates
 
 ### Build and Deploy
+
 ```bash
 # Build both applications
 npm run build
@@ -239,6 +260,7 @@ cd frontend && npm start
 5. **Build errors**: Check TypeScript errors with `npx tsc --noEmit`
 
 ### Debug Commands
+
 ```bash
 # Debug E2E tests
 npm run test:e2e:debug
@@ -254,10 +276,12 @@ cd backend && npx prisma studio
 ## 📚 API Documentation
 
 ### Authentication Endpoints
+
 - `POST /auth/signup` - User registration
 - `POST /auth/login` - User login
 
 ### Generation Endpoints
+
 - `POST /generations` - Create image generation
 - `GET /generations?limit=5` - Get user's generation history
 
@@ -279,6 +303,7 @@ This project is licensed under the MIT License.
 This project includes a comprehensive GitHub Actions CI/CD pipeline with:
 
 ### **Automated Testing**
+
 - ✅ **Unit Tests**: Frontend (Jest + React Testing Library) & Backend (Jest + Supertest)
 - ✅ **E2E Tests**: Playwright cross-browser testing
 - ✅ **Code Quality**: ESLint, Prettier, TypeScript checks
@@ -286,12 +311,14 @@ This project includes a comprehensive GitHub Actions CI/CD pipeline with:
 - ✅ **Coverage**: Code coverage reporting with Codecov
 
 ### **Workflows**
+
 - **CI Pipeline**: Runs on every push/PR with Node.js 18, 20, 21
 - **Code Quality**: Enforces coding standards and best practices
 - **Dependencies**: Weekly security audits and dependency updates
 - **Release**: Automated releases with changelog generation
 
 ### **Status Badges**
+
 ```markdown
 ![CI](https://github.com/yourusername/ai-studio-react-node/workflows/CI%20Pipeline/badge.svg)
 ![Code Quality](https://github.com/yourusername/ai-studio-react-node/workflows/Code%20Quality/badge.svg)

@@ -14,91 +14,91 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: |
-        npm ci
-        cd frontend && npm ci
-        cd ../backend && npm ci
-        
-    - name: Run tests
-      run: |
-        npm run lint
-        npm run format:check
-        cd frontend && npm test -- --coverage --watchAll=false
-        cd ../backend && npm test -- --coverage --watchAll=false
-        
-    - name: Build application
-      run: |
-        cd frontend && npm run build
-        cd ../backend && npm run build
-        
-    - name: Generate changelog
-      id: changelog
-      run: |
-        if [ "${{ github.event_name }}" = "push" ]; then
-          TAG=${GITHUB_REF#refs/tags/}
-        else
-          TAG=${{ github.event.inputs.version }}
-        fi
-        
-        echo "tag=$TAG" >> $GITHUB_OUTPUT
-        
-        # Generate changelog from git commits
-        echo "## Changes in $TAG" > CHANGELOG.md
-        echo "" >> CHANGELOG.md
-        git log --pretty=format:"- %s (%h)" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> CHANGELOG.md
-        
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.changelog.outputs.tag }}
-        release_name: Release ${{ steps.changelog.outputs.tag }}
-        body_path: CHANGELOG.md
-        draft: false
-        prerelease: false
-        
-    - name: Upload build artifacts
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./frontend/.next/
-        asset_name: frontend-build-${{ steps.changelog.outputs.tag }}.zip
-        asset_content_type: application/zip
-        
-    - name: Upload backend build
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./backend/dist/
-        asset_name: backend-build-${{ steps.changelog.outputs.tag }}.zip
-        asset_content_type: application/zip
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci
+          cd ../backend && npm ci
+
+      - name: Run tests
+        run: |
+          npm run lint
+          npm run format:check
+          cd frontend && npm test -- --coverage --watchAll=false
+          cd ../backend && npm test -- --coverage --watchAll=false
+
+      - name: Build application
+        run: |
+          cd frontend && npm run build
+          cd ../backend && npm run build
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            TAG=${GITHUB_REF#refs/tags/}
+          else
+            TAG=${{ github.event.inputs.version }}
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+          # Generate changelog from git commits
+          echo "## Changes in $TAG" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          git log --pretty=format:"- %s (%h)" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> CHANGELOG.md
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          release_name: Release ${{ steps.changelog.outputs.tag }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: false
+
+      - name: Upload build artifacts
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./frontend/.next/
+          asset_name: frontend-build-${{ steps.changelog.outputs.tag }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload backend build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./backend/dist/
+          asset_name: backend-build-${{ steps.changelog.outputs.tag }}.zip
+          asset_content_type: application/zip
 
   notify:
     runs-on: ubuntu-latest
     needs: release
     if: always()
-    
+
     steps:
-    - name: Notify deployment
-      run: |
-        echo "Release ${{ steps.changelog.outputs.tag }} has been created!"
-        echo "You can now deploy this version to production."
+      - name: Notify deployment
+        run: |
+          echo "Release ${{ steps.changelog.outputs.tag }} has been created!"
+          echo "You can now deploy this version to production."

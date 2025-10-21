@@ -5,10 +5,12 @@ This directory contains the CI/CD pipeline configuration for the AI Studio proje
 ## Workflows Overview
 
 ### 1. **CI Pipeline** (`ci.yml`)
+
 **Triggers:** Push to main/develop, Pull Requests
 **Purpose:** Comprehensive testing and validation
 
 **Jobs:**
+
 - **Test Matrix**: Runs on Node.js 18, 20, 21
   - ESLint & Prettier checks
   - Frontend unit tests with coverage
@@ -19,20 +21,24 @@ This directory contains the CI/CD pipeline configuration for the AI Studio proje
 - **Security**: Vulnerability scanning with Trivy
 
 ### 2. **Dependencies & Security** (`dependencies.yml`)
+
 **Triggers:** Weekly schedule (Mondays 2 AM), Manual dispatch
 **Purpose:** Dependency management and security monitoring
 
 **Features:**
+
 - Outdated package detection
 - Security audit with npm audit
 - Dependency review on PRs
 - Automated security reports
 
 ### 3. **Code Quality** (`code-quality.yml`)
+
 **Triggers:** Pull Requests, Push to main/develop
 **Purpose:** Code quality enforcement
 
 **Checks:**
+
 - ESLint with detailed JSON output
 - Prettier formatting validation
 - TypeScript type checking
@@ -41,10 +47,12 @@ This directory contains the CI/CD pipeline configuration for the AI Studio proje
 - Bundle size analysis
 
 ### 4. **Release** (`release.yml`)
-**Triggers:** Git tags (v*), Manual dispatch
+
+**Triggers:** Git tags (v\*), Manual dispatch
 **Purpose:** Automated release management
 
 **Features:**
+
 - Automated testing before release
 - Changelog generation from git commits
 - GitHub release creation
@@ -92,12 +100,14 @@ npm run check
 ### Environment Variables
 
 The workflows use these environment variables:
+
 - `GITHUB_TOKEN`: Automatically provided by GitHub
 - `NODE_VERSION`: Set to 20 for consistency
 
 ### Secrets (Optional)
 
 For enhanced functionality, add these secrets in GitHub:
+
 - `CODECOV_TOKEN`: For detailed coverage reporting
 - `DEPLOY_TOKEN`: For automated deployments
 - `SLACK_WEBHOOK`: For deployment notifications
@@ -105,6 +115,7 @@ For enhanced functionality, add these secrets in GitHub:
 ### Matrix Strategy
 
 The test job uses a matrix strategy to test against multiple Node.js versions:
+
 - Node.js 18 (LTS)
 - Node.js 20 (LTS)
 - Node.js 21 (Current)
@@ -142,25 +153,27 @@ npx playwright install --with-deps
 ### Modifying Triggers
 
 Update the `on:` section in workflow files:
+
 ```yaml
 on:
   push:
-    branches: [ main, develop, feature/* ]
+    branches: [main, develop, feature/*]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   schedule:
-    - cron: '0 2 * * 1'  # Weekly on Mondays
+    - cron: '0 2 * * 1' # Weekly on Mondays
 ```
 
 ### Adding Notifications
 
 Add notification steps to workflows:
+
 ```yaml
 - name: Notify on Success
   if: success()
   run: |
     echo "✅ All checks passed!"
-    
+
 - name: Notify on Failure
   if: failure()
   run: |
@@ -180,6 +193,7 @@ Add notification steps to workflows:
 ## Support
 
 For issues with the CI/CD pipeline:
+
 1. Check the Actions tab in GitHub
 2. Review the workflow logs
 3. Test locally with the same commands
