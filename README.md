@@ -1,91 +1,105 @@
 # AI Studio - Next.js Frontend + Node.js Backend
 
-This repo contains two folders:
-- backend: Express + TypeScript + Prisma (runs on port 4000)
-- frontend: Next.js App Router (runs on port 3000)
+A full-stack AI image generation application with user authentication, image upload, and generation capabilities.
 
-## Quick start (local)
-1. Backend
-   - cd backend
-   - npm install
-   - npx prisma generate
-   - npx prisma migrate dev --name init
-   - npm run dev
-2. Frontend
-   - cd frontend
-   - npm install
-   - npm run dev
-3. Visit http://localhost:3000 and create an account, then go to Studio.
+## 🏗️ Architecture
 
+This repo contains two main components:
+- **backend**: Express + TypeScript + Prisma + SQLite (runs on port 4000)
+- **frontend**: Next.js App Router + React + TypeScript (runs on port 3000)
 
-# AI Studio E2E Tests
+## 📋 Prerequisites
 
-This directory contains comprehensive End-to-End (E2E) tests for the AI Studio application using Playwright.
+- Node.js 18+ 
+- npm 8+
+- Git
 
-## 🧪 Test Coverage
+## 🚀 Quick Start
 
-### Authentication Flow
-- ✅ Login page display and navigation
-- ✅ Signup page display and navigation  
-- ✅ User registration with validation
-- ✅ User login with valid/invalid credentials
-- ✅ Logout functionality
-- ✅ Form validation (email format, password length)
-- ✅ Error handling for authentication failures
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd ai-studio-react-node
+```
 
-### Studio Page - Image Generation
-- ✅ Studio interface display
-- ✅ Upload component functionality
-- ✅ Style selection dropdown
-- ✅ Prompt input validation
-- ✅ Image generation process
-- ✅ Generation abort functionality
-- ✅ Result section display
-- ✅ History section display
+### 2. Install Dependencies
+```bash
+# Install root dependencies
+npm install
 
-### Responsive Design
-- ✅ Mobile device compatibility (375x667)
-- ✅ Tablet device compatibility (768x1024)
-- ✅ Desktop browser compatibility
+# Install backend dependencies
+cd backend
+npm install
 
-### Error Handling
-- ✅ Network error handling
-- ✅ Server error handling
-- ✅ Graceful error message display
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
 
-### Accessibility
-- ✅ Proper form labels and ARIA attributes
-- ✅ Keyboard navigation support
-- ✅ Button state management
-- ✅ Screen reader compatibility
+### 3. Database Setup
+```bash
+cd backend
+npx prisma generate
+npx prisma migrate dev --name init
+```
 
-### User Experience
-- ✅ Loading indicators and states
-- ✅ Form clearing after operations
-- ✅ Smooth user interactions
-- ✅ Visual feedback for actions
+### 4. Environment Variables
+Create `.env` files if needed:
 
-## 🚀 Running Tests
+**Backend** (`backend/.env`):
+```env
+JWT_SECRET=your_jwt_secret_here
+DATABASE_URL="file:./dev.db"
+```
 
-### Prerequisites
-Make sure both frontend and backend servers are running:
+**Frontend** (`frontend/.env.local`):
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
+```
+
+### 5. Start the Application
 ```bash
 # Terminal 1 - Backend
 cd backend
 npm run dev
 
-# Terminal 2 - Frontend  
+# Terminal 2 - Frontend
 cd frontend
 npm run dev
 ```
 
-### Run All E2E Tests
+### 6. Access the Application
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:4000
+
+## 🧪 Testing
+
+### Unit Tests
+
+**Backend Tests:**
 ```bash
-npm run test:e2e
+cd backend
+npm test
+npm test -- --coverage
 ```
 
-### Run Tests in Different Modes
+**Frontend Tests:**
 ```bash
+cd frontend
+npm test
+npm test -- --coverage
+```
+
+### E2E Tests
+
+**Prerequisites:**
+Make sure both servers are running (see Quick Start steps 5)
+
+**Run E2E Tests:**
+```bash
+# Run all E2E tests
+npm run test:e2e
+
 # Run with UI (interactive mode)
 npm run test:e2e:ui
 
@@ -99,7 +113,7 @@ npm run test:e2e:debug
 npm run test:e2e:report
 ```
 
-### Run Specific Test Suites
+**Run Specific Test Suites:**
 ```bash
 # Run only authentication tests
 npx playwright test --grep "Authentication Flow"
@@ -111,77 +125,178 @@ npx playwright test --grep "Studio Page"
 npx playwright test --grep "Responsive Design"
 ```
 
-## 📁 Test Structure
-
-```
-tests/
-├── e2e.spec.ts          # Main E2E test file
-├── README.md            # This file
-└── fixtures/            # Test data and fixtures (if needed)
-```
-
-## 🔧 Configuration
-
-The E2E tests are configured in `playwright.config.ts`:
-
-- **Base URL**: `http://localhost:3000` (frontend)
-- **Backend URL**: `http://localhost:4000` (backend)
-- **Browsers**: Chromium, Firefox, WebKit
-- **Mobile Testing**: Pixel 5, iPhone 12
-- **Auto-start Servers**: Both frontend and backend start automatically
-
-## 📊 Test Data
-
-Tests use the following test data:
-
-```typescript
-const testUser = {
-  email: 'test@example.com',
-  password: 'password123',
-  invalidEmail: 'invalid-email',
-  shortPassword: '123',
-  wrongPassword: 'wrongpassword'
-};
-
-const testImage = {
-  prompt: 'A beautiful sunset over mountains',
-  style: 'Classic'
-};
-```
-
-## 🐛 Debugging
-
-### View Test Results
+### All Tests
 ```bash
-npm run test:e2e:report
+# Run all tests (unit + E2E)
+npm run test:all
 ```
 
-### Debug Specific Test
+## 🔧 Development
+
+### Code Quality
 ```bash
-npx playwright test --debug --grep "test name"
+# Lint code
+npm run lint
+
+# Fix linting issues
+npm run lint:fix
+
+# Check formatting
+npm run format:check
+
+# Format code
+npm run format
+
+# Run all checks
+npm run check
 ```
 
-### Screenshots and Videos
-- Screenshots are automatically taken on test failures
-- Videos are recorded for failed tests
-- Traces are available for debugging
+### Build for Production
+```bash
+# Build backend
+cd backend
+npm run build
 
-## 📝 Writing New Tests
+# Build frontend
+cd frontend
+npm run build
+```
 
-1. Add new test cases to `e2e.spec.ts`
-2. Follow the existing test structure and naming conventions
-3. Use descriptive test names
-4. Include proper assertions
-5. Test both positive and negative scenarios
-6. Consider accessibility and responsive design
+## 📁 Project Structure
 
-## 🔍 Best Practices
+```
+ai-studio-react-node/
+├── backend/                 # Express.js backend
+│   ├── src/
+│   │   ├── controllers/     # Route controllers
+│   │   ├── middlewares/     # Custom middlewares
+│   │   ├── models/          # Database models
+│   │   ├── routes/          # API routes
+│   │   └── server.ts        # Server entry point
+│   ├── tests/               # Backend unit tests
+│   └── prisma/              # Database schema
+├── frontend/                # Next.js frontend
+│   ├── app/
+│   │   ├── components/      # React components
+│   │   ├── hooks/           # Custom hooks
+│   │   ├── login/           # Login page
+│   │   ├── signup/          # Signup page
+│   │   └── studio/          # Studio page
+│   └── tests/               # Frontend unit tests
+├── tests/                   # E2E tests
+├── .github/workflows/       # CI/CD pipelines
+└── README.md
+```
 
-- **Isolation**: Each test is independent and cleans up after itself
-- **Reliability**: Tests wait for elements to be ready before interacting
-- **Maintainability**: Use page object model for complex interactions
-- **Performance**: Tests run in parallel when possible
-- **Coverage**: Test all user journeys and edge cases
+## 🎯 Features
+
+### Authentication
+- User registration and login
+- JWT token-based authentication
+- Password hashing with bcrypt
+- Form validation
+
+### Image Generation
+- Image upload with preview
+- Style selection (Classic, Avant-garde, Street)
+- Prompt-based generation
+- Request abort functionality
+- Exponential retry logic
+- Generation history
+
+### User Experience
+- Responsive design (mobile, tablet, desktop)
+- Loading states and error handling
+- Accessibility features
+- Smooth animations and transitions
+
+## 🚀 Deployment
+
+### Environment Setup
+1. Set up production environment variables
+2. Configure database (SQLite or PostgreSQL)
+3. Set up reverse proxy (nginx)
+4. Configure SSL certificates
+
+### Build and Deploy
+```bash
+# Build both applications
+npm run build
+
+# Start production servers
+cd backend && npm start
+cd frontend && npm start
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Port conflicts**: Ensure ports 3000 and 4000 are available
+2. **Database issues**: Run `npx prisma migrate dev` to reset database
+3. **Dependencies**: Delete `node_modules` and run `npm install`
+4. **E2E tests failing**: Ensure both servers are running
+5. **Build errors**: Check TypeScript errors with `npx tsc --noEmit`
+
+### Debug Commands
+```bash
+# Debug E2E tests
+npm run test:e2e:debug
+
+# Check TypeScript errors
+cd frontend && npx tsc --noEmit
+cd backend && npx tsc --noEmit
+
+# Check database
+cd backend && npx prisma studio
+```
+
+## 📚 API Documentation
+
+### Authentication Endpoints
+- `POST /auth/signup` - User registration
+- `POST /auth/login` - User login
+
+### Generation Endpoints
+- `POST /generations` - Create image generation
+- `GET /generations?limit=5` - Get user's generation history
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `npm run test:all`
+5. Run linting: `npm run check`
+6. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🚀 CI/CD Pipeline
+
+This project includes a comprehensive GitHub Actions CI/CD pipeline with:
+
+### **Automated Testing**
+- ✅ **Unit Tests**: Frontend (Jest + React Testing Library) & Backend (Jest + Supertest)
+- ✅ **E2E Tests**: Playwright cross-browser testing
+- ✅ **Code Quality**: ESLint, Prettier, TypeScript checks
+- ✅ **Security**: Vulnerability scanning with Trivy
+- ✅ **Coverage**: Code coverage reporting with Codecov
+
+### **Workflows**
+- **CI Pipeline**: Runs on every push/PR with Node.js 18, 20, 21
+- **Code Quality**: Enforces coding standards and best practices
+- **Dependencies**: Weekly security audits and dependency updates
+- **Release**: Automated releases with changelog generation
+
+### **Status Badges**
+```markdown
+![CI](https://github.com/yourusername/ai-studio-react-node/workflows/CI%20Pipeline/badge.svg)
+![Code Quality](https://github.com/yourusername/ai-studio-react-node/workflows/Code%20Quality/badge.svg)
+![Dependencies](https://github.com/yourusername/ai-studio-react-node/workflows/Dependencies%20%26%20Security/badge.svg)
+```
 
 ## 🚨 Troubleshooting
 
@@ -191,6 +306,7 @@ npx playwright test --debug --grep "test name"
 2. **Database issues**: Tests clean up data automatically
 3. **Network timeouts**: Increase timeout in config if needed
 4. **Browser issues**: Reinstall browsers with `npx playwright install`
+5. **CI failures**: Check GitHub Actions tab for detailed logs
 
 ### Getting Help
 
@@ -198,3 +314,4 @@ npx playwright test --debug --grep "test name"
 - Review test output and screenshots
 - Use debug mode to step through tests
 - Check browser console for errors
+- Review CI/CD workflow documentation in `.github/workflows/README.md`
