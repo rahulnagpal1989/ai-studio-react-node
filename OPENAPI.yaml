@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Modelia Mini API
-  version: 0.1.0
+  title: AI Studio
+  version: 1.0.0
 paths:
   /auth/signup:
     post:

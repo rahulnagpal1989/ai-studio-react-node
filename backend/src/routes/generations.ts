@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { createGeneration, listGenerations } from '../controllers/generationsController';
+
+import {
+  createGeneration,
+  listGenerations,
+} from '../controllers/generationsController';
 import { authMiddleware } from '../middlewares/auth';
 
 const router = Router();
