@@ -43,7 +43,7 @@ export async function createGeneration(req: Request, res: Response) {
     await new Promise(r => setTimeout(r, Math.random() * 1000 + 2000));
 
     // 20% overload simulation
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.5) {
       return res.status(503).json({ message: 'Model overloaded' });
     }
 

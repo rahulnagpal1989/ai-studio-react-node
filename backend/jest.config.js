@@ -13,7 +13,7 @@ module.exports = {
   detectOpenHandles: true,
   globals: {
     'ts-jest': {
-      tsconfig: 'tsconfig.test.json'
-    }
-  }
+      tsconfig: 'tsconfig.test.json',
+    },
+  },
 };
