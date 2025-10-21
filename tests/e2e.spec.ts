@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 // Test data
 const testUser = {
@@ -199,13 +199,15 @@ test.describe('AI Studio E2E Tests', () => {
       await expect(styleSelect).toBeVisible();
 
       // Check available style options exist
-      await expect(
-        styleSelect.locator('option[value="Classic"]')
-      ).toHaveCount(1);
+      await expect(styleSelect.locator('option[value="Classic"]')).toHaveCount(
+        1
+      );
       await expect(
         styleSelect.locator('option[value="Avant-garde"]')
       ).toHaveCount(1);
-      await expect(styleSelect.locator('option[value="Street"]')).toHaveCount(1);
+      await expect(styleSelect.locator('option[value="Street"]')).toHaveCount(
+        1
+      );
 
       // Test style selection
       await styleSelect.selectOption('Avant-garde');
@@ -269,8 +271,6 @@ test.describe('AI Studio E2E Tests', () => {
 
     test('should display history section', async ({ page }) => {
       // Check history section exists
-      const historySection = page.locator('text=History');
-      await expect(historySection).toBeVisible();
       await expect(page.locator('h3').nth(0)).toContainText('History');
     });
   });
@@ -328,9 +328,7 @@ test.describe('AI Studio E2E Tests', () => {
       await page.click('button:has-text("Generate")');
 
       // Should show error message
-      await expect(
-        page.locator('text=Network Error')
-      ).toBeVisible();
+      await expect(page.locator('text=Network Error')).toBeVisible();
     });
 
     test('should handle server errors', async ({ page }) => {
@@ -373,10 +371,10 @@ test.describe('AI Studio E2E Tests', () => {
     test('should support keyboard navigation', async ({ page }) => {
       // Click on the page to ensure focus
       await page.click('body');
-      
+
       // Tab through form elements
       await page.keyboard.press('Tab'); // Should focus on image input
-    //   await expect(page.locator('input[type="file"]')).toBeFocused();//because it is not focusable
+      //   await expect(page.locator('input[type="file"]')).toBeFocused();//because it is not focusable
 
       await page.keyboard.press('Tab'); // Should focus on prompt input
       await expect(page.locator('input[name="prompt"]')).toBeFocused();

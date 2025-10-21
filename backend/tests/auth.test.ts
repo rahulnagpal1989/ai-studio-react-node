@@ -165,7 +165,9 @@ describe('Auth Controller', () => {
 
       // Assert
       expect(response.status).toBe(500);
-      expect(response.body).toEqual({ message: 'There is some issue please try again later' });
+      expect(response.body).toEqual({
+        message: 'There is some issue please try again later',
+      });
     });
   });
 
@@ -216,7 +218,9 @@ describe('Auth Controller', () => {
 
       // Assert
       expect(response.status).toBe(401);
-      expect(response.body).toEqual({ message: 'Invalid Email ID or Password' });
+      expect(response.body).toEqual({
+        message: 'Invalid Email ID or Password',
+      });
       expect(mockedFindUserByEmail).toHaveBeenCalledWith(
         'nonexistent@example.com'
       );
@@ -243,7 +247,9 @@ describe('Auth Controller', () => {
 
       // Assert
       expect(response.status).toBe(401);
-      expect(response.body).toEqual({ message: 'Invalid Email ID or Password' });
+      expect(response.body).toEqual({
+        message: 'Invalid Email ID or Password',
+      });
       expect(mockedFindUserByEmail).toHaveBeenCalledWith('test@example.com');
       expect(mockedBcrypt.compare).toHaveBeenCalledWith(
         'wrongpassword',
@@ -313,7 +319,9 @@ describe('Auth Controller', () => {
 
       // Assert
       expect(response.status).toBe(500);
-      expect(response.body).toEqual({ message: 'There is some issue please try again later' });
+      expect(response.body).toEqual({
+        message: 'There is some issue please try again later',
+      });
     });
   });
 
