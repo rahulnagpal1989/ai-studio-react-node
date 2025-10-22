@@ -47,7 +47,7 @@ jobs:
       - name: Check for TODO comments
         run: |
           echo "Checking for TODO comments..."
-          if grep -r "TODO\|FIXME\|HACK" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" .; then
+          if grep -r "TODO\|FIXME\|HACK" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=dist --exclude-dir=coverage --exclude-dir=test-results --exclude-dir=playwright-report .; then
             echo "Found TODO/FIXME/HACK comments in code"
             exit 1
           fi
