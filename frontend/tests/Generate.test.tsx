@@ -48,7 +48,7 @@ describe('useGenerate Hook', () => {
 
       expect(generatedData).toEqual(mockResponse.data);
       expect(mockedAxios.post).toHaveBeenCalledWith(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/generations`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000'}/generations`,
         {
           prompt: 'test prompt',
           style: 'Classic',

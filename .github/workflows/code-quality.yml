@@ -1,0 +1,104 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch full history for better analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci
+          cd ../backend && npm ci
+
+      - name: Run ESLint with detailed output
+        run: |
+          echo "Running ESLint..."
+          npm run lint -- --format=json --output-file=eslint-results.json || true
+
+      - name: Run Prettier check
+        run: |
+          echo "Running Prettier check..."
+          npx prettier --check . --ignore-path .prettierignore
+
+      - name: Type checking
+        run: |
+          echo "Running TypeScript type checks..."
+          cd frontend && npx tsc --noEmit
+          cd ../backend && npx tsc --noEmit --project tsconfig.json
+
+      - name: Check for TODO comments
+        run: |
+          echo "Checking for TODO comments..."
+          if grep -r "TODO\|FIXME\|HACK" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=dist --exclude-dir=coverage --exclude-dir=test-results --exclude-dir=playwright-report .; then
+            echo "Found TODO/FIXME/HACK comments in code"
+            exit 1
+          fi
+
+      - name: Check for console.log statements
+        run: |
+          echo "Checking for console.log statements..."
+          if grep -r "console\.log\|console\.warn\|console\.error" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=dist .; then
+            echo "Found console statements in production code"
+            echo "Consider removing or replacing with proper logging"
+          fi
+
+      - name: Upload ESLint results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eslint-results
+          path: eslint-results.json
+          retention-days: 7
+
+  performance-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci
+          cd ../backend && npm ci
+
+      - name: Build frontend
+        run: cd frontend && npm run build
+
+      - name: Analyze bundle size
+        run: |
+          echo "Analyzing bundle size..."
+          cd frontend
+          if [ -d ".next" ]; then
+            du -sh .next/static/chunks/*.js | sort -hr | head -10
+          fi
+
+      - name: Check for large files
+        run: |
+          echo "Checking for large files..."
+          find . -name "*.js" -o -name "*.ts" -o -name "*.tsx" | xargs wc -l | sort -nr | head -10

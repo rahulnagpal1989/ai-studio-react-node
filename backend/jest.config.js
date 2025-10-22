@@ -11,4 +11,9 @@ module.exports = {
   testTimeout: 10000,
   forceExit: true,
   detectOpenHandles: true,
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.test.json',
+    },
+  },
 };
