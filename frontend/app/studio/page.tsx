@@ -24,7 +24,7 @@ export default function StudioPage() {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/generations?limit=5`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000'}/generations?limit=5`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setHistory(res.data);

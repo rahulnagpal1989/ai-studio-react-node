@@ -19,7 +19,7 @@ export default function SignupPage() {
     setLoading(true);
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/signup`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000'}/auth/signup`,
         { email, password }
       );
       localStorage.setItem('token', res.data.token);
