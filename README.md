@@ -325,7 +325,7 @@ This project includes a comprehensive GitHub Actions CI/CD pipeline with:
 
 ### Common Issues
 
-1. **Port conflicts**: Ensure ports 3000 and 5000 are available
+1. **Port conflicts**: Ensure ports 3000 and 4000 are available
 2. **Database issues**: Tests clean up data automatically
 3. **Network timeouts**: Increase timeout in config if needed
 4. **Browser issues**: Reinstall browsers with `npx playwright install`
