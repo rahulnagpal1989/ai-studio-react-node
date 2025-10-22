@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Modelia AI Studio',
+  title: 'AI Studio',
   description: 'Mini AI Studio',
 };
 
