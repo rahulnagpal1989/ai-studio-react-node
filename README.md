@@ -6,7 +6,7 @@ A full-stack AI image generation application with user authentication, image upl
 
 This repo contains two main components:
 
-- **backend**: Express + TypeScript + Prisma + SQLite (runs on port 4000)
+- **backend**: Express + TypeScript + SQLite (runs on port 4000)
 - **frontend**: Next.js App Router + React + TypeScript (runs on port 3000)
 
 ## 📋 Prerequisites
@@ -43,8 +43,7 @@ npm install
 
 ```bash
 cd backend
-npx prisma generate
-npx prisma migrate dev --name init
+# Database will be created automatically when the server starts
 ```
 
 ### 4. Environment Variables
@@ -55,7 +54,6 @@ Create `.env` files if needed:
 
 ```env
 JWT_SECRET=your_jwt_secret_here
-DATABASE_URL="file:./dev.db"
 ```
 
 **Frontend** (`frontend/.env.local`):
@@ -190,7 +188,7 @@ ai-studio-react-node/
 │   │   ├── routes/          # API routes
 │   │   └── server.ts        # Server entry point
 │   ├── tests/               # Backend unit tests
-│   └── prisma/              # Database schema
+│   └── src/                 # Source code
 ├── frontend/                # Next.js frontend
 │   ├── app/
 │   │   ├── components/      # React components
@@ -254,7 +252,7 @@ cd frontend && npm start
 ### Common Issues
 
 1. **Port conflicts**: Ensure ports 3000 and 4000 are available
-2. **Database issues**: Run `npx prisma migrate dev` to reset database
+2. **Database issues**: Database will be created automatically when server starts
 3. **Dependencies**: Delete `node_modules` and run `npm install`
 4. **E2E tests failing**: Ensure both servers are running
 5. **Build errors**: Check TypeScript errors with `npx tsc --noEmit`
@@ -269,8 +267,6 @@ npm run test:e2e:debug
 cd frontend && npx tsc --noEmit
 cd backend && npx tsc --noEmit
 
-# Check database
-cd backend && npx prisma studio
 ```
 
 ## 📚 API Documentation
